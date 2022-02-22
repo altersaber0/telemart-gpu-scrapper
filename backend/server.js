@@ -3,10 +3,7 @@ const fs = require("fs")
 const cors = require("cors")
 
 const app = express()
-
-/*
-при GET запросе прочитать файл data.json и отправить его (try на случай если он в процессе удаления/записи) или отправить код 500 (catch) (это обработается на фронте)
-*/
+app.use(cors())
 
 app.get("/data", (req, res) => {
   try {

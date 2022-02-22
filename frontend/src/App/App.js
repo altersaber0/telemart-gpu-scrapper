@@ -1,23 +1,38 @@
 import "./App.css"
 import "../GpuComponent/GpuComponent"
 import GpuComponent from "../GpuComponent/GpuComponent"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 
 /* 
-при запуске страницы: useEffect с пустым массивом: берет данные из localStorage, но если их там нет (?try/catch), то делает GET запрос на сервер (try/catch), сохраняет в локалСторедж -> после этого рендерит
-
 в это время действует таймер (начинается тоже через useEffect с пустым массивом): через setInterval получать обьекты Date и рендерить (чтоб время не перезапускалось). Внутри функции рендера времени условие: если обе переменные минут и секунд стают равны нулям, то вызвать GET запрос на сервер и обновить стейт через setFinalData; обновить таймер после этого
 */
 
-function App({ data }) {
-  // adding isVisible property to every item
-  const fullData = data.map((item) => {
-    return { ...item, isVisible: true }
-  })
+function App() {
+  const data = []
 
   // adding State of list
-  const [finalData, setFinalData] = useState(fullData)
+  const [finalData, setFinalData] = useState(data)
+
+  // on page load: grab data from localStorage if it exists or make a request to the API and save response data to localStorage
+  useEffect(() => {
+    if (localStorage.getItem("data") === null) {
+      axios.get("http://localhost:5000/data").then((res) => {
+        const responseData = res.data
+        localStorage.setItem("data", JSON.stringify(responseData))
+        const fullData = responseData.map((item) => {
+          return { ...item, isVisible: true }
+        })
+        setFinalData(fullData)
+      })
+    } else {
+      const data = JSON.parse(localStorage.getItem("data"))
+      const fullData = data.map((item) => {
+        return { ...item, isVisible: true }
+      })
+      setFinalData(fullData)
+    }
+  }, [])
 
   // getting user input in the Search form
   const searchQuery = useRef()
