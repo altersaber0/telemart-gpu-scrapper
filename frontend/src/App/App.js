@@ -1,17 +1,14 @@
 import "./App.css"
 import "../GpuComponent/GpuComponent"
 import GpuComponent from "../GpuComponent/GpuComponent"
+import Timer from "../TimerComponent/Timer"
 import { useEffect, useRef, useState } from "react"
 import axios from "axios"
-
-/* 
-в это время действует таймер (начинается тоже через useEffect с пустым массивом): через setInterval получать обьекты Date и рендерить (чтоб время не перезапускалось). Внутри функции рендера времени условие: если обе переменные минут и секунд стают равны нулям, то вызвать GET запрос на сервер и обновить стейт через setFinalData; обновить таймер после этого
-*/
 
 function App() {
   const data = []
 
-  // adding State of list
+  // adding State of the list
   const [finalData, setFinalData] = useState(data)
 
   // on page load: grab data from localStorage if it exists or make a request to the API and save response data to localStorage
@@ -104,6 +101,7 @@ function App() {
   return (
     <div className="App">
       <h1 className="main-heading">Telemart GPU Status</h1>
+      <Timer />
       <div className="wrapper">
         <div className="container">
           <div className="name-container label">
